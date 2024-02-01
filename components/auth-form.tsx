@@ -1,5 +1,7 @@
 "use client";
 
+import { registerData, register as registerUser } from "@/actions/register";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,19 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCallback, useState } from "react";
-import { FaGithub, FaGoogle } from "react-icons/fa";
-import Logo from "./logo";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { register as registerUser, registerData } from "@/actions/register";
 import { cn } from "@/lib/utils";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { TextFieldError } from "./ui/text-field-error";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash, FaGithub, FaGoogle } from "react-icons/fa";
 import { GoAlertFill } from "react-icons/go";
 import { toast } from "sonner";
+import Logo from "./logo";
+import { TextFieldError } from "./ui/text-field-error";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -29,6 +30,7 @@ const AuthForm = () => {
   const [showPass1, setShowPass1] = useState<boolean>(false);
   const [showPass2, setShowPass2] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const router = useRouter();
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const {
     register,
@@ -63,8 +65,38 @@ const AuthForm = () => {
       }
       setLoading(false);
     } else {
-      //NextAuthJS login
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          if (callback?.error) {
+            setError("Invalid credentials!");
+          }
+
+          if (callback?.ok && !callback?.error) {
+            toast.success("Logged in successfully!");
+          }
+        })
+        .finally(() => setLoading(false));
     }
+  };
+
+  const handleSocialLogin = (social: string) => {
+    setLoading(true);
+    signIn(social, {
+      redirect: false,
+    })
+      .then((callback) => {
+        if (callback?.error) {
+          setError("Invalid credentials!");
+        }
+
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in successfully!");
+        }
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -84,18 +116,18 @@ const AuthForm = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-6 max-w-md mx-auto">
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => handleSocialLogin("github")}>
             <FaGithub className="mr-2 h-4 w-4" />
             GitHub
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => handleSocialLogin("google")}>
             <FaGoogle className="mr-2 h-4 w-4" />
             Google
           </Button>
         </div>
         {error && (
           <Alert variant="destructive" className="flex items-center">
-            <GoAlertFill className="h-5 w-5" />
+            <GoAlertFill className="h-4 w-4" />
             <AlertTitle>{error}</AlertTitle>
           </Alert>
         )}
