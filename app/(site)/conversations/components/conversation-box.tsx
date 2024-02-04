@@ -5,8 +5,8 @@ import { FullConversationType } from "@/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import Avatar from "./ui/avatar";
-import AvatarGroup from "./ui/avatar-group";
+import Avatar from "../../../../components/ui/avatar";
+import AvatarGroup from "../../../../components/ui/avatar-group";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 

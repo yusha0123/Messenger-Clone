@@ -23,7 +23,7 @@ const Header = ({ conversation }: Props) => {
       return `${conversation.users.length} members`;
     }
 
-    return "Active";
+    return "Active Now";
   }, [conversation]);
 
   return (

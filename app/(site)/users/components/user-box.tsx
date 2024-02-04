@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
-import Avatar from "./ui/avatar";
+import Avatar from "../../../../components/ui/avatar";
 
 interface UserBoxProps {
   data: User;
