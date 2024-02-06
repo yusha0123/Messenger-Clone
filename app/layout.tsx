@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import AuthContext from "@/context/auth-context";
+import OverlayProvider from "@/components/overlays/overlay-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <AuthContext>{children}</AuthContext>
+        <AuthContext>
+          {children}
+          <OverlayProvider />
+        </AuthContext>
       </body>
       <Toaster position="top-right" />
     </html>

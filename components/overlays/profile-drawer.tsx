@@ -7,8 +7,9 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import useOtherUser from "@/hooks/use-other-user";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
+import ConfirmModal from "./confirm-modal";
 
 type Props = {
   isOpen: boolean;
@@ -31,10 +32,12 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
     return data.isGroup ? `${data.users.length} members` : "Active Now";
   }, [data]);
 
+  const onConfirm = useCallback(() => {}, []);
+
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent>
-        <div className="relative mt-6 flex-1 px-4 sm:px-6">
+        <div className="mt-6">
           <div className="flex flex-col items-center">
             <div className="mb-2">
               {data.isGroup ? (
@@ -46,9 +49,11 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
             <div>{title}</div>
             <div className="text-sm text-gray-500">{statusText}</div>
             <div className="my-8">
-              <Button variant={"destructive"}>
-                Delete <FaTrash className="h-4 w-4 ml-2" />
-              </Button>
+              <ConfirmModal onConfirm={onConfirm}>
+                <Button variant={"destructive"}>
+                  Delete <FaTrash className="h-4 w-4 ml-2" />
+                </Button>
+              </ConfirmModal>
             </div>
           </div>
           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
