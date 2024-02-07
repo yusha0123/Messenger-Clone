@@ -90,11 +90,11 @@ const SettingsModal = () => {
             <Input
               disabled={isLoading}
               placeholder="Name"
-              id="name"
               required
               {...register("name", {
                 required: true,
               })}
+              defaultValue={currentUser?.name || ""}
             />
             <div className="w-full flex justify-end gap-4">
               <Button

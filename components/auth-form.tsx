@@ -60,7 +60,9 @@ const AuthForm = () => {
       if (error) {
         setError(error);
       } else if (success) {
-        toast.success("Registration successful!");
+        toast.success("Registration successful!", {
+          description: "You can login now.",
+        });
         reset();
       }
       setLoading(false);
@@ -76,6 +78,7 @@ const AuthForm = () => {
 
           if (callback?.ok && !callback?.error) {
             toast.success("Logged in successfully!");
+            router.push("/users");
           }
         })
         .finally(() => setLoading(false));

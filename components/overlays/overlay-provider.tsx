@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ProfileDrawer from "./profile-drawer";
 import SettingsModal from "./settings-modal";
+import CreateGroupModal from "./create-group-modal";
 
 const OverlayProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,6 +17,7 @@ const OverlayProvider = () => {
   return (
     <>
       <SettingsModal />
+      <CreateGroupModal />
     </>
   );
 };

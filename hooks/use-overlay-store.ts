@@ -6,8 +6,8 @@ export type overlayType = "settingsModal" | "createGroupModal" | "imageModal";
 interface overlayStore {
   type: overlayType | null;
   isOpen: boolean;
-  data: User | string | null;
-  onOpen: (type: overlayType, data?: User | string | null) => void;
+  data: User | User[] | string | null;
+  onOpen: (type: overlayType, data?: User | User[] | string | null) => void;
   onClose: () => void;
 }
 
