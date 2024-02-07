@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import ProfileDrawer from "./profile-drawer";
+import SettingsModal from "./settings-modal";
 
 const OverlayProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -12,7 +13,11 @@ const OverlayProvider = () => {
 
   if (!isMounted) return null;
 
-  return <></>;
+  return (
+    <>
+      <SettingsModal />
+    </>
+  );
 };
 
 export default OverlayProvider;

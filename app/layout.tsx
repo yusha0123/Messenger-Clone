@@ -25,7 +25,7 @@ export default function RootLayout({
           <OverlayProvider />
         </AuthContext>
       </body>
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
     </html>
   );
 }

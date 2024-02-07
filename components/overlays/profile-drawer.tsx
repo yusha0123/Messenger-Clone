@@ -7,7 +7,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import useOtherUser from "@/hooks/use-other-user";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
 import ConfirmModal from "./confirm-modal";
 
@@ -32,8 +32,6 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
     return data.isGroup ? `${data.users.length} members` : "Active Now";
   }, [data]);
 
-  const onConfirm = useCallback(() => {}, []);
-
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
       <SheetContent>
@@ -49,7 +47,7 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
             <div>{title}</div>
             <div className="text-sm text-gray-500">{statusText}</div>
             <div className="my-8">
-              <ConfirmModal onConfirm={onConfirm}>
+              <ConfirmModal>
                 <Button variant={"destructive"}>
                   Delete <FaTrash className="h-4 w-4 ml-2" />
                 </Button>

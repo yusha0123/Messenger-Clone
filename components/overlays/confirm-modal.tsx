@@ -11,19 +11,39 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import useConversation from "@/hooks/use-conversation";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 import { FiAlertTriangle } from "react-icons/fi";
+import { toast } from "sonner";
 
 interface Props {
   children: React.ReactNode;
-  onConfirm: () => void;
 }
 
-const ConfirmModal = ({ children, onConfirm }: Props) => {
+const ConfirmModal = ({ children }: Props) => {
+  const router = useRouter();
+  const { conversationId } = useConversation();
+
   const handleConfirm = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    onConfirm();
+    const promise = axios
+      .delete(`/api/conversations/${conversationId}`)
+      .then(() => {
+        router.push("/conversations");
+        router.refresh();
+      })
+      .catch((error) => {
+        throw error;
+      });
+
+    toast.promise(promise, {
+      loading: "Deleting conversation...",
+      success: "Conversation deleted!",
+      error: "Failed to delete conversation.",
+    });
   };
 
   return (
