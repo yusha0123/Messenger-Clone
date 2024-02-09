@@ -38,7 +38,7 @@ const SettingsModal = () => {
   const image = watch("image");
 
   const handleUpload = (result: any) => {
-    setValue("image", result.info.secure_url, {
+    setValue("image", result?.info?.secure_url, {
       shouldValidate: true,
     });
   };
@@ -105,7 +105,7 @@ const SettingsModal = () => {
               >
                 Cancel
               </Button>
-              <Button disabled={isLoading} type="submit">
+              <Button isLoading={isLoading} type="submit">
                 Save
               </Button>
             </div>

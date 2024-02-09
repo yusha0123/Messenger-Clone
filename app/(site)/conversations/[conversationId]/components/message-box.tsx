@@ -4,6 +4,7 @@ import { FullMessageType } from "@/types";
 import { useSession } from "next-auth/react";
 import { format } from "date-fns";
 import Image from "next/image";
+import ImageModal from "@/components/overlays/image-modal";
 
 type Props = {
   data: FullMessageType;
@@ -42,14 +43,15 @@ const MessageBox = ({ data, isLast }: Props) => {
         </div>
         <div className={message}>
           {data.image ? (
-            <Image
-              alt="image"
-              height="250"
-              width="250"
-              onClick={() => {}}
-              src={data.image}
-              className="object-cover cursor-pointer hover:scale-110 transition translate"
-            />
+            <ImageModal imageUrl={data.image}>
+              <Image
+                alt="image"
+                height="250"
+                width="250"
+                src={data.image}
+                className="object-cover cursor-pointer hover:scale-110 transition translate"
+              />
+            </ImageModal>
           ) : (
             <div>{data.body}</div>
           )}
