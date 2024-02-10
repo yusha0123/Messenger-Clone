@@ -45,17 +45,33 @@ const MessageBox = ({ data, isLast }: Props) => {
           {data.image ? (
             <ImageModal imageUrl={data.image}>
               <Image
-                alt="image"
+                alt="Image"
                 height="250"
                 width="250"
                 src={data.image}
-                className="object-cover cursor-pointer hover:scale-110 transition translate"
+                className="
+                object-cover 
+                cursor-pointer 
+                hover:scale-110 
+                transition 
+                translate
+              "
               />
             </ImageModal>
           ) : (
             <div>{data.body}</div>
           )}
         </div>
+        {isLast && isOwn && seenList.length > 0 && (
+          <div
+            className="
+            text-xs 
+            font-light 
+            text-gray-500"
+          >
+            {`Seen by ${seenList}`}
+          </div>
+        )}
       </div>
     </div>
   );

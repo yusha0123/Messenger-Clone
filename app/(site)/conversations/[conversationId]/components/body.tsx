@@ -23,7 +23,7 @@ const Body = ({ initialMessages }: Props) => {
 
   useEffect(() => {
     pusherClient.subscribe(conversationId);
-    bottomRef?.current?.scrollIntoView({ behavior: "smooth" });
+    bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
