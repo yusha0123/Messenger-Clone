@@ -1,13 +1,13 @@
 import { User } from "@prisma/client";
 import { create } from "zustand";
 
-export type overlayType = "settingsModal" | "createGroupModal" | "imageModal";
+export type overlayType = "settingsModal" | "createGroupModal" | "confirmModal";
 
 interface overlayStore {
   type: overlayType | null;
   isOpen: boolean;
-  data: User | User[] | string | null;
-  onOpen: (type: overlayType, data?: User | User[] | string | null) => void;
+  data: User | User[] | null;
+  onOpen: (type: overlayType, data?: User | User[] | null) => void;
   onClose: () => void;
 }
 

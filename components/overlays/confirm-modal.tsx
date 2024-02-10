@@ -9,53 +9,39 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import useConversation from "@/hooks/use-conversation";
+import useOverlayStore from "@/hooks/use-overlay-store";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FiAlertTriangle } from "react-icons/fi";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
-interface Props {
-  children: React.ReactNode;
-}
-
-const ConfirmModal = ({ children }: Props) => {
+const ConfirmModal = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const { conversationId } = useConversation();
+  const { isOpen, type, onClose } = useOverlayStore();
+  const isModalOpen = isOpen && type === "confirmModal";
 
-  const handleConfirm = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.stopPropagation();
-    const promise = axios
-      .delete(`/api/conversations/${conversationId}`)
-      .then(() => {
-        router.push("/conversations");
-        router.refresh();
-      })
-      .catch((error) => {
-        throw error;
-      });
-
-    toast.promise(promise, {
-      loading: "Deleting conversation...",
-      success: "Conversation deleted!",
-      error: "Failed to delete conversation.",
-    });
+  const handleConfirm = async () => {
+    try {
+      setIsLoading(true);
+      await axios.delete(`/api/conversations/${conversationId}`);
+      router.push("/conversations");
+      router.refresh();
+      onClose();
+    } catch (error) {
+      toast.error("Failed to delete conversation.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger
-        onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-          e.stopPropagation()
-        }
-        asChild
-      >
-        {children}
-      </AlertDialogTrigger>
+    <AlertDialog open={isModalOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2 my-2 mx-auto">
@@ -71,14 +57,14 @@ const ConfirmModal = ({ children }: Props) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel
-            onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
-              e.stopPropagation()
-            }
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <Button
+            onClick={handleConfirm}
+            isLoading={isLoading}
+            variant={"destructive"}
           >
-            Cancel
-          </AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm}>Confirm</AlertDialogAction>
+            Confirm
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

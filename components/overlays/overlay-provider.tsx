@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import ProfileDrawer from "./profile-drawer";
-import SettingsModal from "./settings-modal";
+import ConfirmModal from "./confirm-modal";
 import CreateGroupModal from "./create-group-modal";
+import SettingsModal from "./settings-modal";
 
 const OverlayProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -18,6 +18,7 @@ const OverlayProvider = () => {
     <>
       <SettingsModal />
       <CreateGroupModal />
+      <ConfirmModal />
     </>
   );
 };

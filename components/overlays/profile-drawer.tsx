@@ -5,11 +5,11 @@ import AvatarGroup from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import useOtherUser from "@/hooks/use-other-user";
+import useOverlayStore from "@/hooks/use-overlay-store";
 import { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { FaTrash } from "react-icons/fa";
-import ConfirmModal from "./confirm-modal";
 
 type Props = {
   isOpen: boolean;
@@ -19,6 +19,7 @@ type Props = {
 
 const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
   const otherUser = useOtherUser(data);
+  const { onOpen } = useOverlayStore();
 
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -47,11 +48,12 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
             <div>{title}</div>
             <div className="text-sm text-gray-500">{statusText}</div>
             <div className="my-8">
-              <ConfirmModal>
-                <Button variant={"destructive"}>
-                  Delete <FaTrash className="h-4 w-4 ml-2" />
-                </Button>
-              </ConfirmModal>
+              <Button
+                variant={"destructive"}
+                onClick={() => onOpen("confirmModal")}
+              >
+                Delete <FaTrash className="h-4 w-4 ml-2" />
+              </Button>
             </div>
           </div>
           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
