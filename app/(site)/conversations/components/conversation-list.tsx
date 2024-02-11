@@ -19,7 +19,7 @@ interface Props {
   title: string;
 }
 
-const ConversationList = ({ initialItems, users, title }: Props) => {
+const ConversationList = ({ initialItems, users }: Props) => {
   const [items, setItems] = useState(initialItems);
   const router = useRouter();
   const { conversationId, isOpen } = useConversation();

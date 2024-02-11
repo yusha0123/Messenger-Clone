@@ -14,6 +14,9 @@ const getConversationById = async (conversationId: string) => {
     const conversation = await db.conversation.findUnique({
       where: {
         id: conversationId,
+        userIds: {
+          has: currentUser.id,
+        },
       },
       include: {
         users: true,
