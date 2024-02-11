@@ -4,6 +4,7 @@ import Avatar from "@/components/ui/avatar";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import useActiveList from "@/hooks/use-active-list";
 import useOtherUser from "@/hooks/use-other-user";
 import useOverlayStore from "@/hooks/use-overlay-store";
 import { Conversation, User } from "@prisma/client";
@@ -20,6 +21,8 @@ type Props = {
 const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
   const otherUser = useOtherUser(data);
   const { onOpen } = useOverlayStore();
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const joinedDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -30,8 +33,12 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
   }, [data.name, otherUser.name]);
 
   const statusText = useMemo(() => {
-    return data.isGroup ? `${data.users.length} members` : "Active Now";
-  }, [data]);
+    if (data.isGroup) {
+      return `${data.users.length} members`;
+    }
+
+    return isActive ? "Active Now" : "Offline";
+  }, [data, isActive]);
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>

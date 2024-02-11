@@ -50,7 +50,7 @@ const AuthForm = () => {
     setVariant((variant) => {
       return variant === "REGISTER" ? "LOGIN" : "REGISTER";
     });
-  }, [variant]);
+  }, []);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setLoading(true);

@@ -89,7 +89,7 @@ const CreateGroupModal = () => {
           <div className="flex justify-end gap-4">
             <Button
               type="button"
-              isLoading={isLoading}
+              disabled={isLoading}
               variant={"secondary"}
               onClick={onClose}
             >

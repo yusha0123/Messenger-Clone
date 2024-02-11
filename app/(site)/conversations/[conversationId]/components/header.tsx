@@ -4,6 +4,7 @@ import ProfileDrawer from "@/components/overlays/profile-drawer";
 import Avatar from "@/components/ui/avatar";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
+import useActiveList from "@/hooks/use-active-list";
 import useOtherUser from "@/hooks/use-other-user";
 import { Conversation, User } from "@prisma/client";
 import Link from "next/link";
@@ -20,14 +21,16 @@ type Props = {
 const Header = ({ conversation }: Props) => {
   const otherUser = useOtherUser(conversation);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
 
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
       return `${conversation.users.length} members`;
     }
 
-    return "Active Now";
-  }, [conversation]);
+    return isActive ? "Active Now" : "Offline";
+  }, [conversation, isActive]);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import AuthContext from "@/context/auth-context";
 import OverlayProvider from "@/components/overlays/overlay-provider";
+import ActiveStatus from "@/components/active-status";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <AuthContext>
           {children}
           <OverlayProvider />
+          <ActiveStatus />
         </AuthContext>
       </body>
       <Toaster position="top-center" />
