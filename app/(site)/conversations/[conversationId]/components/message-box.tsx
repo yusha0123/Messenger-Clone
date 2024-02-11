@@ -8,17 +8,12 @@ import ImageModal from "@/components/overlays/image-modal";
 
 type Props = {
   data: FullMessageType;
-  isLast?: boolean;
 };
 
-const MessageBox = ({ data, isLast }: Props) => {
+const MessageBox = ({ data }: Props) => {
   const session = useSession();
 
   const isOwn = session?.data?.user?.email === data?.sender?.email;
-  const seenList = (data.seen || [])
-    .filter((user) => user.email !== data?.sender?.email)
-    .map((user) => user.name)
-    .join(", ");
 
   const container = cn("flex gap-3 p-4", isOwn && "justify-end");
   const avatar = cn(isOwn && "order-2");
@@ -62,16 +57,6 @@ const MessageBox = ({ data, isLast }: Props) => {
             <div>{data.body}</div>
           )}
         </div>
-        {isLast && isOwn && seenList.length > 0 && (
-          <div
-            className="
-            text-xs 
-            font-light 
-            text-gray-500"
-          >
-            {`Seen by ${seenList}`}
-          </div>
-        )}
       </div>
     </div>
   );

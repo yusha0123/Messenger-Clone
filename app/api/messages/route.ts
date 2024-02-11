@@ -34,7 +34,6 @@ export async function POST(request: Request) {
         },
       },
       include: {
-        seen: true,
         sender: true,
       },
     });
@@ -53,11 +52,7 @@ export async function POST(request: Request) {
       },
       include: {
         users: true,
-        messages: {
-          include: {
-            seen: true,
-          },
-        },
+        messages: true,
       },
     });
 

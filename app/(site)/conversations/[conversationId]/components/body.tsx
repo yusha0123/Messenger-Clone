@@ -1,12 +1,11 @@
 "use client";
 
 import useConversation from "@/hooks/use-conversation";
+import { pusherClient } from "@/lib/pusher";
 import { FullMessageType } from "@/types";
+import { find } from "lodash";
 import { useEffect, useRef, useState } from "react";
 import MessageBox from "./message-box";
-import axios from "axios";
-import { pusherClient } from "@/lib/pusher";
-import { find } from "lodash";
 
 type Props = {
   initialMessages: FullMessageType[];
@@ -18,16 +17,10 @@ const Body = ({ initialMessages }: Props) => {
   const { conversationId } = useConversation();
 
   useEffect(() => {
-    axios.post(`/api/conversations/${conversationId}/seen`);
-  }, [conversationId]);
-
-  useEffect(() => {
     pusherClient.subscribe(conversationId);
     bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
-      axios.post(`/api/conversations/${conversationId}/seen`);
-
       setMessages((current) => {
         //prevent message duplication
         if (find(current, { id: message.id })) {
@@ -65,11 +58,7 @@ const Body = ({ initialMessages }: Props) => {
   return (
     <div className="flex-1 overflow-y-auto">
       {messages.map((message, i) => (
-        <MessageBox
-          isLast={i === messages.length}
-          key={message.id}
-          data={message}
-        />
+        <MessageBox key={message.id} data={message} />
       ))}
       <div ref={bottomRef} className="pt-24" />
     </div>

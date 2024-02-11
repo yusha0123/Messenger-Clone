@@ -1,14 +1,13 @@
 "use client";
 
+import Avatar from "@/components/ui/avatar";
+import AvatarGroup from "@/components/ui/avatar-group";
 import useOtherUser from "@/hooks/use-other-user";
+import { cn } from "@/lib/utils";
 import { FullConversationType } from "@/types";
-import { useSession } from "next-auth/react";
+import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo } from "react";
-import Avatar from "../../../../components/ui/avatar";
-import AvatarGroup from "../../../../components/ui/avatar-group";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 type Props = {
   data: FullConversationType;
@@ -17,7 +16,6 @@ type Props = {
 
 const ConversationBox = ({ data, selected }: Props) => {
   const otherUser = useOtherUser(data);
-  const session = useSession();
   const router = useRouter();
 
   const handleClick = useCallback(() => {
@@ -29,25 +27,6 @@ const ConversationBox = ({ data, selected }: Props) => {
 
     return messages[messages.length - 1];
   }, [data.messages]);
-
-  const userEmail = useMemo(
-    () => session.data?.user?.email,
-    [session.data?.user?.email]
-  );
-
-  const hasSeen = useMemo(() => {
-    if (!lastMessage) {
-      return false;
-    }
-
-    const seenArray = lastMessage.seen || [];
-
-    if (!userEmail) {
-      return false;
-    }
-
-    return seenArray.filter((user) => user.email === userEmail).length !== 0;
-  }, [userEmail, lastMessage]);
 
   const lastMessageText = useMemo(() => {
     if (lastMessage?.image) {
@@ -87,14 +66,7 @@ const ConversationBox = ({ data, selected }: Props) => {
               </p>
             )}
           </div>
-          <p
-            className={cn(
-              "truncate text-sm",
-              hasSeen ? "text-gray-500" : "text-black font-medium"
-            )}
-          >
-            {lastMessageText}
-          </p>
+          <p className="truncate text-sm text-gray-500">{lastMessageText}</p>
         </div>
       </div>
     </div>

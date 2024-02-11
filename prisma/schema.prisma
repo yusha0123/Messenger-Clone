@@ -18,10 +18,9 @@ model User {
   updatedAt       DateTime       @updatedAt
   conversationIds String[]       @db.ObjectId
   conversations   Conversation[] @relation(fields: [conversationIds], references: [id])
-  seenMessageIds  String[]       @db.ObjectId
-  seenMessages    Message[]      @relation("Seen", fields: [seenMessageIds], references: [id])
-  accounts        Account[]
-  messages        Message[]
+
+  accounts Account[]
+  messages Message[]
 }
 
 model Account {
@@ -61,7 +60,6 @@ model Message {
   image          String?
   createdAt      DateTime     @default(now())
   seenIds        String[]     @db.ObjectId
-  seen           User[]       @relation("Seen", fields: [seenIds], references: [id])
   conversationId String       @db.ObjectId
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   senderId       String       @db.ObjectId
