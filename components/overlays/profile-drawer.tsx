@@ -1,5 +1,6 @@
 "use client";
 
+import UserBox from "@/app/(site)/users/components/user-box";
 import Avatar from "@/components/ui/avatar";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
@@ -67,12 +68,14 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
               {data.isGroup && (
                 <div>
-                  <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
-                    Emails
+                  <dt className="text-sm font-medium text-gray-500 text-center">
+                    {data?.users?.length} Members
                   </dt>
-                  <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                    {data.users.map((user) => user.email).join(", ")}
-                  </dd>
+                  <div className="py-2 overflow-y-auto">
+                    {data.users.map((user) => (
+                      <UserBox data={user} key={user.id} />
+                    ))}
+                  </div>
                 </div>
               )}
               {!data.isGroup && (

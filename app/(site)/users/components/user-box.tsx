@@ -1,9 +1,13 @@
+"use client";
+
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
-import Avatar from "../../../../components/ui/avatar";
+import Avatar from "@/components/ui/avatar";
 import LoadingModal from "@/components/overlays/loading-modal";
+import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 interface UserBoxProps {
   data: User;
@@ -12,8 +16,14 @@ interface UserBoxProps {
 const UserBox: React.FC<UserBoxProps> = ({ data }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const session = useSession();
+
+  const isCurrentUser = session?.data?.user?.email === data.email;
 
   const handleClick = useCallback(() => {
+    if (isCurrentUser) {
+      return;
+    }
     setIsLoading(true);
 
     axios
@@ -22,14 +32,17 @@ const UserBox: React.FC<UserBoxProps> = ({ data }) => {
         router.push(`/conversations/${data.data.id}`);
       })
       .finally(() => setIsLoading(false));
-  }, [data, router]);
+  }, [data, router, session, isCurrentUser]);
 
   return (
     <>
       {isLoading && <LoadingModal />}
       <div
         onClick={handleClick}
-        className="w-full relative flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer"
+        className={cn(
+          "w-full relative flex items-center space-x-3 bg-white p-3 hover:bg-neutral-100 rounded-lg transition cursor-pointer",
+          isCurrentUser && "cursor-default"
+        )}
       >
         <Avatar user={data} />
         <div className="min-w-0 flex-1">
