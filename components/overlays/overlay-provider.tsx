@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ConfirmModal from "./confirm-modal";
 import CreateGroupModal from "./create-group-modal";
 import SettingsModal from "./settings-modal";
+import UploadModal from "./upload-modal";
 
 const OverlayProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -19,6 +20,7 @@ const OverlayProvider = () => {
       <SettingsModal />
       <CreateGroupModal />
       <ConfirmModal />
+      <UploadModal />
     </>
   );
 };

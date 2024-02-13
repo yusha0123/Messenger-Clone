@@ -1,7 +1,11 @@
 import { User } from "@prisma/client";
 import { create } from "zustand";
 
-export type overlayType = "settingsModal" | "createGroupModal" | "confirmModal";
+export type overlayType =
+  | "settingsModal"
+  | "createGroupModal"
+  | "confirmModal"
+  | "uploadModal";
 
 interface overlayStore {
   type: overlayType | null;

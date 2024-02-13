@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import useOverlayStore from "@/hooks/use-overlay-store";
 import { User } from "@prisma/client";
 import axios from "axios";
-import { CldUploadButton } from "next-cloudinary";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,7 +20,7 @@ import { MdAddPhotoAlternate } from "react-icons/md";
 import { toast } from "sonner";
 
 const SettingsModal = () => {
-  const { isOpen, type, data, onClose } = useOverlayStore();
+  const { isOpen, type, data, onClose, onOpen } = useOverlayStore();
   const isModalOpen = isOpen && type === "settingsModal";
   const currentUser = data as User;
 
@@ -35,26 +34,39 @@ const SettingsModal = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
-  const image = watch("image");
+  const [selectedImage, setSelectedImage] = useState<File>();
 
-  const handleUpload = (result: any) => {
-    setValue("image", result?.info?.secure_url, {
-      shouldValidate: true,
-    });
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+    }
   };
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setIsLoading(true);
+    const formData = new FormData();
+    formData.append("name", data.name);
+
+    // Check if selectedImage is defined before appending it to FormData
+    if (selectedImage) {
+      formData.append("file", selectedImage);
+    }
 
     axios
-      .post("/api/settings", data)
+      .post("/api/upload?type=settings", formData)
       .then(() => {
-        onClose();
         router.refresh();
         toast.success("Profile updated successfully!");
       })
-      .catch(() => toast.error("Something went wrong!"))
-      .finally(() => setIsLoading(false));
+      .catch((error) => {
+        console.error(error);
+        toast.error("Something went wrong!");
+      })
+      .finally(() => {
+        onClose();
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -69,23 +81,35 @@ const SettingsModal = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col space-y-5 items-center">
             <div className="flex flex-col items-center gap-3">
+              <input
+                type="file"
+                accept="image/*"
+                id="imageInput"
+                style={{ display: "none" }}
+                onChange={handleImageChange}
+              />
               <Image
                 width="100"
                 height="100"
                 className="rounded-full"
-                src={image || currentUser?.image || "/user.png"}
+                src={
+                  selectedImage
+                    ? URL.createObjectURL(selectedImage)
+                    : currentUser?.image || "/user.png"
+                }
                 alt="Avatar"
               />
-              <CldUploadButton
-                options={{ maxFiles: 1 }}
-                onUpload={handleUpload}
-                uploadPreset={"oirnl8qs"}
-              >
-                <Button disabled={isLoading} type="button" variant={"outline"}>
+              <label htmlFor="imageInput" className="cursor-pointer">
+                <Button
+                  disabled={isLoading}
+                  type="button"
+                  variant={"outline"}
+                  onClick={() => document.getElementById("imageInput")?.click()}
+                >
                   Change
                   <MdAddPhotoAlternate className="h-4 w-4 ml-2" />
                 </Button>
-              </CldUploadButton>
+              </label>
             </div>
             <Input
               disabled={isLoading}

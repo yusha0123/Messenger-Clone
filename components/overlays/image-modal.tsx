@@ -13,8 +13,14 @@ const ImageModal = ({ children, imageUrl }: Props) => {
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <div className="relative h-80 w-80 mx-auto">
-          <Image src={imageUrl} alt="image" fill className="object-cover" />
+        <div className="relative h-80 w-80 mx-auto flex items-center">
+          <Image
+            src={imageUrl}
+            alt="image"
+            width={320}
+            height={320}
+            className="rounded-md"
+          />
         </div>
       </DialogContent>
     </Dialog>

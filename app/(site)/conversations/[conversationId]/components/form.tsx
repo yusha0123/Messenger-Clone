@@ -1,15 +1,16 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import useConversation from "@/hooks/use-conversation";
+import useOverlayStore from "@/hooks/use-overlay-store";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { HiPhoto } from "react-icons/hi2";
 import { HiPaperAirplane } from "react-icons/hi";
-import { Button } from "@/components/ui/button";
-import { CldUploadButton } from "next-cloudinary";
+import { HiPhoto } from "react-icons/hi2";
 
 const Form = () => {
   const { conversationId } = useConversation();
+  const { onOpen } = useOverlayStore();
 
   const { register, handleSubmit, reset } = useForm<FieldValues>({
     defaultValues: {
@@ -25,22 +26,13 @@ const Form = () => {
     });
   };
 
-  const handleUpload = (result: any) => {
-    axios.post("/api/messages", {
-      image: result.info.secure_url,
-      conversationId,
-    });
-  };
-
   return (
     <div className="py-4 px-4 bg-white border-t flex items-center gap-2 lg:gap-4 w-full">
-      <CldUploadButton
-        options={{ maxFiles: 1 }}
-        onUpload={handleUpload}
-        uploadPreset={"oirnl8qs"}
-      >
-        <HiPhoto size={30} className="text-sky-500" />
-      </CldUploadButton>
+      <HiPhoto
+        size={30}
+        className="text-sky-500 cursor-pointer"
+        onClick={() => onOpen("uploadModal")}
+      />
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex items-center gap-2 lg:gap-4 w-full"
