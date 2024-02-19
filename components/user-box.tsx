@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@prisma/client";
 import Avatar from "@/components/ui/avatar";
@@ -11,9 +11,10 @@ import { cn } from "@/lib/utils";
 
 interface UserBoxProps {
   data: User;
+  onClose?: () => void;
 }
 
-const UserBox: React.FC<UserBoxProps> = ({ data }) => {
+const UserBox: React.FC<UserBoxProps> = ({ data, onClose }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
@@ -25,7 +26,7 @@ const UserBox: React.FC<UserBoxProps> = ({ data }) => {
       return;
     }
     setIsLoading(true);
-
+    onClose?.();
     axios
       .post("/api/conversations", { userId: data.id })
       .then((data) => {
@@ -58,4 +59,4 @@ const UserBox: React.FC<UserBoxProps> = ({ data }) => {
   );
 };
 
-export default UserBox;
+export default memo(UserBox);

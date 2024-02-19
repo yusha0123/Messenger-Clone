@@ -1,6 +1,6 @@
 "use client";
 
-import UserBox from "@/app/(site)/users/components/user-box";
+import UserBox from "@/components/user-box";
 import Avatar from "@/components/ui/avatar";
 import AvatarGroup from "@/components/ui/avatar-group";
 import { Button } from "@/components/ui/button";
@@ -73,7 +73,7 @@ const ProfileDrawer = ({ isOpen, onClose, data }: Props) => {
                   </dt>
                   <div className="py-2 overflow-y-auto">
                     {data.users.map((user) => (
-                      <UserBox data={user} key={user.id} />
+                      <UserBox data={user} key={user.id} onClose={onClose} />
                     ))}
                   </div>
                 </div>
